@@ -1,0 +1,98 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-md-8 col-xl-6 chat">
+  <div class="card">
+    <div class="card-header msg_head">
+      <div class="d-flex bd-highlight">
+        <div class="img_cont">
+          <img
+            src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg"
+            class="rounded-circle user_img"
+          />
+        </div>
+        <div class="user_info">
+          <span>Chat Room: {{code}}</span>
+        </div>
+      </div>
+      <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
+      <div class="action_menu">
+        <ul>
+          <li><i class="fas fa-user-circle"></i> View profile</li>
+          <li><i class="fas fa-users"></i> Add to close friends</li>
+          <li><i class="fas fa-plus"></i> Add to group</li>
+          <li><i class="fas fa-ban"></i> Block</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-body msg_card_body" id="messages"></div>
+    <div class="card-footer">
+      <div class="input-group">
+        <div class="input-group-append">
+          <span class="input-group-text attach_btn"
+            ><i class="fas fa-paperclip"></i
+          ></span>
+        </div>
+        <textarea
+          name="message"
+          id="message"
+          class="form-control type_msg"
+          placeholder="Type your message..."
+        ></textarea>
+        <div class="input-group-append">
+          <span
+            class="input-group-text send_btn"
+            type="button"
+            name="send"
+            id="send-btn"
+            onclick="sendMessage()"
+            ><i class="fas fa-location-arrow"></i
+          ></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function () {
+    $("#action_menu_btn").click(function () {
+      $(".action_menu").toggle();
+    });
+  });
+  // Create socketio
+  const socket = io();
+  // Get messages div
+  const messages = document.getElementById("messages");
+  // Function that adds messages to messages div
+  function createMessage(name, msg) {
+    const content = `
+        <div class="d-flex justify-content-start mb-4">
+            <div class="img_cont_msg">
+                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
+                
+            </div>
+            <div class="msg_container">
+                <strong>${name}</strong>: ${msg}
+                <span class="msg_time">${new Date().toLocaleString()}</span>
+            </div>
+		</div>
+
+    `;
+    // Add content to messages div
+    messages.innerHTML += content;
+  }
+
+  // Listen for the message event
+  socket.on("message", (data) => {
+    createMessage(data.name, data.message);
+  });
+  function sendMessage(e) {
+    const message = document.getElementById("message");
+    if (message.value == "") return;
+    socket.emit("message", { data: message.value });
+    message.value = "";
+  }
+</script>
+{% for msg in messages %}
+<script type="text/javascript">
+  createMessage("{{msg.name}}", "{{msg.message}}");
+</script>
+{% endfor%} {% endblock %}

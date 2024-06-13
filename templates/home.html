@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-md-4 col-xl-3 chat">
+  <form method="post" class="container-12 form">
+    <h3 class="user_info">Welcome to PyChat</h3>
+    <div class="input-group">
+      <input
+        type="text"
+        placeholder="Enter your name"
+        name="name"
+        value="{{name}}"
+        class="form-control"
+      />
+    </div>
+    <div class="input-group">
+      <input
+        type="text"
+        placeholder="Enter room code"
+        name="code"
+        value="{{code}}"
+        class="form-control"
+      />
+      <button
+        type="submit"
+        name="join"
+        class="input-group-prepend btn-sm btn-info"
+      >
+        Join a Room
+      </button>
+    </div>
+    <button
+      type="submit"
+      name="create"
+      class="btn-success form-control"
+    >
+      Create Room
+    </button>
+    {% if error %}
+    <div class="user_info">
+      <span>{{error}}</span>
+    </div>
+    {% endif %}
+  </form>
+</div>
+{% endblock%}
