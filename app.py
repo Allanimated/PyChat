@@ -1,11 +1,12 @@
 import os
 import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_socketio import join_room, leave_room, SocketIO, send
 import random
 from string import ascii_uppercase
 
-eventlet.monkey_patch()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "^tfvs*(wy&(wu)wjp{w_iuw&fwyjnlw:k{w__}})"
