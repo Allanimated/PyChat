@@ -62,37 +62,46 @@
   // Get messages div
   const messages = document.getElementById("messages");
   // Function that adds messages to messages div
-  function createMessage(name, msg) {
-    const content = `
+  function createMessage(name, msg, isAdmin) {
+    const content = isAdmin ? `
         <div class="d-flex justify-content-start mb-4">
             <div class="img_cont_msg">
-                <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">
-                
+              <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">  
             </div>
             <div class="msg_container">
                 <strong>${name}</strong>: ${msg}
                 <span class="msg_time">${new Date().toLocaleString()}</span>
             </div>
-		</div>
+		    </div>
 
-    `;
+    ` : `
+      <div class="d-flex justify-content-end mb-4">
+        <div class="msg_cotainer_send">
+          <strong>${name}</strong>: ${msg}
+          <span class="msg_time">${new Date().toLocaleString()}</span>
+        </div>
+        <div class="img_cont_msg">
+          <img src="https://static.turbosquid.com/Preview/001292/481/WV/_D.jpg" class="rounded-circle user_img_msg">  
+        </div>
+      </div>
+    `
     // Add content to messages div
     messages.innerHTML += content;
   }
 
   // Listen for the message event
   socket.on("message", (data) => {
-    createMessage(data.name, data.message);
+    createMessage(data.name, data.message, data.admin);
   });
   function sendMessage(e) {
     const message = document.getElementById("message");
     if (message.value == "") return;
-    socket.emit("message", { data: message.value });
+    socket.emit("message", { data: message.value});
     message.value = "";
   }
 </script>
 {% for msg in messages %}
 <script type="text/javascript">
-  createMessage("{{msg.name}}", "{{msg.message}}");
+  createMessage("{{msg.name}}", "{{msg.message}}", "{{msg.admin}}");
 </script>
 {% endfor%} {% endblock %}

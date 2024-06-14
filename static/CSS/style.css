@@ -170,6 +170,8 @@ html {
   background-color: #78e08f;
   padding: 10px;
   position: relative;
+  min-width: 150px;
+  max-width: 300px;
 }
 .msg_time {
   position: absolute;
